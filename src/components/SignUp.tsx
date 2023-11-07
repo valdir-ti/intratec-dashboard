@@ -1,8 +1,13 @@
 'use client'
 
+import { isLogin } from "@/utils/auth"
+import { baseUrl } from "@/utils/constant"
+import axios from "axios"
 import Link from "next/link"
-import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 import { FaFacebookF, FaGoogle, FaInstagram } from 'react-icons/fa'
+import { toast } from "react-toastify"
 
 const SignUp = () => {
 
@@ -10,9 +15,50 @@ const SignUp = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
-    const handleSignUp = (e: React.SyntheticEvent) => {
+    const router = useRouter()
+
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
+
+        const payload = {
+            name,
+            email,
+            password
+        }
+
+        if(!email && !name && !password) {
+            return
+        }
+
+        axios.post(`${baseUrl}/signup`, payload)
+            .then(() => {
+                toast.success(<div>
+                    Account Created Successfully <br/>
+                    Please Login
+                </div>)
+
+                router.push('/login')
+
+            }).catch((error) => {
+                console.log(error)
+                toast.error(<div>
+                    Account Creation Fails <br/>
+                    Please try again
+                </div>)
+            })
     }
+
+    useEffect(() => {
+        const authenticate = async () => {
+            const loggedIn = await isLogin()
+      
+            if(loggedIn) {
+              router.push('/')
+            }
+          }
+      
+          authenticate()
+    }, [router])
 
     return (
         <div className="grid grid-cols-[30%,1fr]">
@@ -49,7 +95,10 @@ const SignUp = () => {
                         Or use your email account for registration
                     </p>
 
-                    <form className="flex w-[300px] mx-auto flex-col pt-2 gap-2">
+                    <form 
+                        className="flex w-[300px] mx-auto flex-col pt-2 gap-2"
+                        onSubmit={handleSubmit}
+                    >
                         <input 
                             type="text" 
                             placeholder="Name" 
@@ -72,10 +121,7 @@ const SignUp = () => {
                             onChange={ e => setPassword(e.target.value)}
                         />
 
-                        <button 
-                            className="uppercase bg-accent hover:bg-accentDark px-4 py-2 text-white mt-4"
-                            onClick={handleSignUp}
-                        >
+                        <button className="uppercase bg-accent hover:bg-accentDark px-4 py-2 text-white mt-4">
                             Sign Up
                         </button>
                     </form>
