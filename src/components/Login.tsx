@@ -1,17 +1,62 @@
 'use client'
 
+import { isLogin, setAuthentication } from "@/utils/auth"
+import { baseUrl } from "@/utils/constant"
+import axios from "axios"
 import Link from "next/link"
-import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 import { FaFacebookF, FaGoogle, FaInstagram } from "react-icons/fa"
+import { toast } from "react-toastify"
 
 const Login = () => {
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  const handleLogin = (e: React.SyntheticEvent) => {
+  const router = useRouter()
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    const payload = {
+        email,
+        password
+    }
+
+    if(!email || !password) {
+      return
+    }
+
+    axios.post(`${baseUrl}/login`, payload)
+        .then((res) => {
+
+            setAuthentication(res.data.token)
+            toast.success('Login Successfully')
+            router.push('/')
+
+        }).catch((error) => {
+
+            console.log(error)
+
+            toast.error(<div>
+                Login Fails <br/>
+                Please try again
+            </div>)
+        })
   }
+
+  useEffect(() => {
+    const authenticate = async () => {
+        const loggedIn = await isLogin()
+  
+        if(loggedIn) {
+          router.push('/')
+        }
+      }
+  
+      authenticate()
+}, [router])
 
   return (
     <div className="grid grid-cols-[1fr,30%]">
@@ -35,7 +80,10 @@ const Login = () => {
                     Or use your email account for Login
                 </p>
 
-                <form className="flex w-[300px] mx-auto flex-col pt-2 gap-2">
+                <form 
+                  className="flex w-[300px] mx-auto flex-col pt-2 gap-2"
+                  onSubmit={handleSubmit}
+                >
                     <input 
                         type="email" 
                         placeholder="Email" 
@@ -53,10 +101,7 @@ const Login = () => {
 
                     <p>Forgot your password?</p>
 
-                    <button 
-                      className="uppercase bg-accent hover:bg-accentDark px-4 py-2 text-white mt-4"
-                      onClick={handleLogin}
-                    >
+                    <button className="uppercase bg-accent hover:bg-accentDark px-4 py-2 text-white mt-4">
                       Login
                     </button>
                 </form>
