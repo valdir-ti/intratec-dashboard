@@ -1,1 +1,1 @@
-export const baseUrl = 'http://localhost:5002/api'
+export const baseUrl = process.env.NODE_ENV === "development" ? 'http://localhost:5002/api' : 'https://intratec-dashboard-api.onrender.com/api'
