@@ -26,14 +26,14 @@ const SignUp = () => {
             password
         }
 
-        if(!email && !name && !password) {
+        if (!email && !name && !password) {
             return
         }
 
         axios.post(`${baseUrl}/signup`, payload)
             .then(() => {
                 toast.success(<div>
-                    Account Created Successfully <br/>
+                    Account Created Successfully <br />
                     Please Login
                 </div>)
 
@@ -42,7 +42,7 @@ const SignUp = () => {
             }).catch((error) => {
                 console.log(error)
                 toast.error(<div>
-                    Account Creation Fails <br/>
+                    Account Creation Fails <br />
                     Please try again
                 </div>)
             })
@@ -51,14 +51,24 @@ const SignUp = () => {
     useEffect(() => {
         const authenticate = async () => {
             const loggedIn = await isLogin()
-      
-            if(loggedIn) {
-              router.push('/')
+
+            if (loggedIn) {
+                router.push('/')
             }
-          }
-      
-          authenticate()
+        }
+
+        authenticate()
     }, [router])
+
+    useEffect(() => {
+        const aliveServer = async () => {
+            if (process.env.NODE_ENV !== "development") {
+                axios.get('https://intratec-dashboard-api.onrender.com/api')
+            }
+        }
+
+        aliveServer()
+    }, [])
 
     return (
         <div className="grid grid-cols-[30%,1fr]">
@@ -95,30 +105,30 @@ const SignUp = () => {
                         Or use your email account for registration
                     </p>
 
-                    <form 
+                    <form
                         className="flex w-[300px] mx-auto flex-col pt-2 gap-2"
                         onSubmit={handleSubmit}
                     >
-                        <input 
-                            type="text" 
-                            placeholder="Name" 
-                            className="input__style" 
-                            value={name} 
-                            onChange={ e => setName(e.target.value)}
+                        <input
+                            type="text"
+                            placeholder="Name"
+                            className="input__style"
+                            value={name}
+                            onChange={e => setName(e.target.value)}
                         />
-                        <input 
-                            type="email" 
-                            placeholder="Email" 
-                            className="input__style" 
-                            value={email} 
-                            onChange={ e => setEmail(e.target.value)}
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            className="input__style"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
                         />
-                        <input 
-                            type="password" 
-                            placeholder="Password" 
-                            className="input__style" 
-                            value={password} 
-                            onChange={ e => setPassword(e.target.value)}
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            className="input__style"
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
                         />
 
                         <button className="uppercase bg-accent hover:bg-accentDark px-4 py-2 text-white mt-4">
