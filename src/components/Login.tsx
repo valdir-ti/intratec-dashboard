@@ -39,11 +39,10 @@ const Login = () => {
                 toast.success('Login Successfully')
                 router.push('/')
 
-
             }).catch((error) => {
 
+                setVisible(false)                
                 console.log(error)
-
                 toast.error(<div>
                     Login Fails <br />
                     Please try again
@@ -118,7 +117,10 @@ const Login = () => {
 
                         <p>Forgot your password?</p>
 
-                        <button className="uppercase bg-accent hover:bg-accentDark px-4 py-2 text-white mt-4 rounded-md">
+                        <button 
+                            disabled={visible}
+                            className="uppercase bg-accent hover:bg-accentDark px-4 py-2 text-white mt-4 rounded-md"
+                        >
                             <div className={`flex`}>
                                 <SpinnerLoading visible={visible} />
                                 <h2 className={`${visible ? 'ml-[82px]' : 'ml-[104px]'}`}>Login</h2>
