@@ -60,7 +60,7 @@ const Login = () => {
 
     useEffect(() => {
         const aliveServer = async () => {
-            if (process.env.NODE_ENV !== "development") {
+            if (process.env.NODE_ENV === "production") {
                 axios.get('https://intratec-dashboard-api.onrender.com/api')
             }
         }
