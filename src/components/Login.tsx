@@ -41,7 +41,7 @@ const Login = () => {
 
             }).catch((error) => {
 
-                setVisible(false)                
+                setVisible(false)
                 console.log(error)
                 toast.error(<div>
                     Login Fails <br />
@@ -117,7 +117,7 @@ const Login = () => {
 
                         <p>Forgot your password?</p>
 
-                        <button 
+                        <button
                             disabled={visible}
                             className={`uppercase bg-accent px-4 py-2 text-white mt-4 rounded-md ${visible ? 'hover:bg-accent' : 'hover:bg-accentDark'}`}
                         >
@@ -138,7 +138,7 @@ const Login = () => {
                         <p>To keep connected with us please</p>
                         <p>please login with your personal info</p>
                         <Link href="/signup">
-                            <button className="uppercase px-4 py-2 w-[100%] rounded-full border-2 mt-8">                                
+                            <button className="uppercase px-4 py-2 w-[100%] rounded-full border-2 mt-8">
                                 SignUp
                             </button>
                         </Link>
