@@ -8,11 +8,13 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { FaFacebookF, FaGoogle, FaInstagram } from "react-icons/fa"
 import { toast } from "react-toastify"
+import SpinnerLoading from "./LoadingSpinner"
 
 const Login = () => {
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [visible, setVisible] = useState(false)
 
     const router = useRouter()
 
@@ -28,12 +30,15 @@ const Login = () => {
             return
         }
 
+        setVisible(true)
         axios.post(`${baseUrl}/login`, payload)
             .then((res) => {
 
+                setVisible(false)
                 setAuthentication(res.data.token)
                 toast.success('Login Successfully')
                 router.push('/')
+
 
             }).catch((error) => {
 
@@ -113,8 +118,11 @@ const Login = () => {
 
                         <p>Forgot your password?</p>
 
-                        <button className="uppercase bg-accent hover:bg-accentDark px-4 py-2 text-white mt-4">
-                            Login
+                        <button className="uppercase bg-accent hover:bg-accentDark px-4 py-2 text-white mt-4 rounded-md">
+                            <div className={`flex`}>
+                                <SpinnerLoading visible={visible} />
+                                <h2 className={`${visible ? 'ml-[82px]' : 'ml-[104px]'}`}>Login</h2>
+                            </div>
                         </button>
                     </form>
 
@@ -128,7 +136,7 @@ const Login = () => {
                         <p>To keep connected with us please</p>
                         <p>please login with your personal info</p>
                         <Link href="/signup">
-                            <button className="uppercase px-4 py-2 w-[100%] rounded-full border-2 mt-8">
+                            <button className="uppercase px-4 py-2 w-[100%] rounded-full border-2 mt-8">                                
                                 SignUp
                             </button>
                         </Link>
