@@ -8,12 +8,14 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { FaFacebookF, FaGoogle, FaInstagram } from 'react-icons/fa'
 import { toast } from "react-toastify"
+import SpinnerLoading from "./LoadingSpinner"
 
 const SignUp = () => {
 
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [visible, setVisible] = useState(false)
 
     const router = useRouter()
 
@@ -30,8 +32,11 @@ const SignUp = () => {
             return
         }
 
+        setVisible(true)
         axios.post(`${baseUrl}/signup`, payload)
             .then(() => {
+
+                setVisible(false)
                 toast.success(<div>
                     Account Created Successfully <br />
                     Please Login
@@ -40,6 +45,7 @@ const SignUp = () => {
                 router.push('/login')
 
             }).catch((error) => {
+                setVisible(false)
                 console.log(error)
                 toast.error(<div>
                     Account Creation Fails <br />
@@ -133,8 +139,14 @@ const SignUp = () => {
                             onChange={e => setPassword(e.target.value)}
                         />
 
-                        <button className="uppercase bg-accent hover:bg-accentDark px-4 py-2 text-white mt-4">
-                            Sign Up
+                        <button 
+                            disabled={visible}
+                            className={`uppercase bg-accent px-4 py-2 text-white mt-4 rounded-md ${visible ? 'hover:bg-accent' : 'hover:bg-accentDark'}`}
+                        >
+                            <div className={`flex`}>
+                                <SpinnerLoading visible={visible} />
+                                <h2 className={`${visible ? 'ml-[82px]' : 'ml-[104px]'}`}>Sign Up</h2>
+                            </div>
                         </button>
                     </form>
 
