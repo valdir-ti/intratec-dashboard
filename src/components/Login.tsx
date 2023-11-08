@@ -119,7 +119,7 @@ const Login = () => {
 
                         <button 
                             disabled={visible}
-                            className="uppercase bg-accent hover:bg-accentDark px-4 py-2 text-white mt-4 rounded-md"
+                            className={`uppercase bg-accent px-4 py-2 text-white mt-4 rounded-md ${visible ? 'hover:bg-accent' : 'hover:bg-accentDark'}`}
                         >
                             <div className={`flex`}>
                                 <SpinnerLoading visible={visible} />
