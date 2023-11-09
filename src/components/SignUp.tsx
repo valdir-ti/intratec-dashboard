@@ -107,9 +107,12 @@ const SignUp = () => {
             <div className="h-screen grid place-items-center">
                 <div className="text-center">
 
-                    {!isServerAlive && <div className="flex bg-accent text-white p-4 mb-4 align-middle rounded-md">
-                            <LoadingWatch />
-                            <h2 className="ml-3 font-semibold text-2xl mt-[-3px]">Please wait while we are reactivating our server</h2>
+                    {!isServerAlive && 
+                        <div className="absolute left-[20%] top-48">
+                            <div className="flex bg-accent text-white p-4 mb-4 align-middle rounded-md">
+                                <LoadingWatch />
+                                <h2 className="ml-3 font-semibold text-2xl mt-[-3px]">Please wait while we are reactivating our server</h2>
+                            </div>
                         </div>
                     }
 
