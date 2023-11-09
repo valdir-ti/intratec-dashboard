@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 import { FaFacebookF, FaGoogle, FaInstagram } from 'react-icons/fa'
 import { toast } from "react-toastify"
 import SpinnerLoading from "./LoadingSpinner"
+import LoadingWatch from "./LoadingWatch"
 
 const SignUp = () => {
 
@@ -16,6 +17,7 @@ const SignUp = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [visible, setVisible] = useState(false)
+    const [isServerAlive, setIsServerAlive] = useState(process.env.NODE_ENV === "production" ? false : true)
 
     const router = useRouter()
 
@@ -72,6 +74,11 @@ const SignUp = () => {
 
             if (!loggedIn && process.env.NODE_ENV === "production") {
                 axios.get('https://intratec-dashboard-api.onrender.com/api')
+                    .then(() => {
+                        setIsServerAlive(true)
+                    }).catch(() => {
+                        setIsServerAlive(false)
+                    })
             }
         }
 
@@ -99,6 +106,13 @@ const SignUp = () => {
             </div>
             <div className="h-screen grid place-items-center">
                 <div className="text-center">
+
+                    {!isServerAlive && <div className="flex bg-accent text-white p-4 mb-4 align-middle rounded-md">
+                            <LoadingWatch />
+                            <h2 className="ml-3 font-semibold text-2xl mt-[-3px]">Please wait while we are reactivating our server</h2>
+                        </div>
+                    }
+
                     <h1 className="text-accent text-center font-bold text-4xl">Create Account</h1>
                     <div className="flex items-center gap-4 pt-8 w-fit mx-auto">
                         <div className="icon__wrapper">

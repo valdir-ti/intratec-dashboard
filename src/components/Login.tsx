@@ -9,12 +9,14 @@ import { useEffect, useState } from "react"
 import { FaFacebookF, FaGoogle, FaInstagram } from "react-icons/fa"
 import { toast } from "react-toastify"
 import SpinnerLoading from "./LoadingSpinner"
+import LoadingWatch from './LoadingWatch'
 
 const Login = () => {
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [visible, setVisible] = useState(false)
+    const [isServerAlive, setIsServerAlive] = useState(process.env.NODE_ENV === "production" ? false : true)
 
     const router = useRouter()
 
@@ -68,6 +70,11 @@ const Login = () => {
 
             if (!loggedIn && process.env.NODE_ENV === "production") {
                 axios.get('https://intratec-dashboard-api.onrender.com/api')
+                    .then(() => {
+                        setIsServerAlive(true)
+                    }).catch(() => {
+                        setIsServerAlive(false)
+                    })
             }
         }
 
@@ -76,9 +83,15 @@ const Login = () => {
 
     return (
         <div className="grid grid-cols-[1fr,30%]">
-
             <div className="h-screen grid place-items-center">
                 <div className="text-center">
+                   
+                    {!isServerAlive && <div className="flex bg-accent text-white p-4 mb-4 align-middle rounded-md">
+                            <LoadingWatch />
+                            <h2 className="ml-3 font-semibold text-2xl mt-[-3px]">Please wait while we are reactivating our server</h2>
+                        </div>
+                    }
+
                     <h1 className="text-accent text-center font-bold text-4xl">Login to your Account</h1>
                     <div className="flex items-center gap-4 pt-8 w-fit mx-auto">
                         <div className="icon__wrapper">
@@ -138,7 +151,7 @@ const Login = () => {
                         <p>To keep connected with us please</p>
                         <p>please login with your personal info</p>
                         <Link href="/signup">
-                            <button 
+                            <button
                                 disabled={visible}
                                 className="uppercase px-4 py-2 w-[100%] rounded-full border-2 mt-8"
                             >

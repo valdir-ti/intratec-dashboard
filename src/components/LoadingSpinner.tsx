@@ -1,4 +1,4 @@
-import { ColorRing } from "react-loader-spinner";
+import { ColorRing } from "react-loader-spinner"
 
 type SpinnerLoadingProps = {
     visible: boolean
