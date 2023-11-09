@@ -9,7 +9,6 @@ import { useEffect, useState } from "react"
 import { FaFacebookF, FaGoogle, FaInstagram } from 'react-icons/fa'
 import { toast } from "react-toastify"
 import SpinnerLoading from "./LoadingSpinner"
-import LoadingWatch from "./LoadingWatch"
 
 const SignUp = () => {
 
@@ -69,20 +68,19 @@ const SignUp = () => {
     }, [router])
 
     useEffect(() => {
-        const aliveServer = async () => {
-            const loggedIn = await isLogin()
 
-            if (!loggedIn && process.env.NODE_ENV === "production") {
-                axios.get('https://intratec-dashboard-api.onrender.com/api')
-                    .then(() => {
-                        setIsServerAlive(true)
-                    }).catch(() => {
-                        setIsServerAlive(false)
-                    })
-            }
-        }
+        const myPromise = new Promise((resolve) =>
+            fetch("https://intratec-dashboard-api.onrender.com/api")
+            .then((response) => response.json())
+            .then((json) => setTimeout(() => resolve(json), 500))
+        );
 
-        aliveServer()
+        toast.promise(myPromise, {
+            pending: "Please wait while we are reactivating our server",
+            success: "The server is running",
+            error: "Server Error",
+        });
+
     }, [])
 
     return (
@@ -94,7 +92,7 @@ const SignUp = () => {
                         <p>To keep connected with us please</p>
                         <p>please login with your personal info</p>
                         <Link href="/login">
-                            <button 
+                            <button
                                 disabled={visible}
                                 className="uppercase px-4 py-2 w-[100%] rounded-full border-2 mt-8"
                             >
@@ -106,15 +104,6 @@ const SignUp = () => {
             </div>
             <div className="h-screen grid place-items-center">
                 <div className="text-center">
-
-                    {!isServerAlive && 
-                        <div className="absolute left-[20%] top-48">
-                            <div className="flex bg-accent text-white p-4 mb-4 align-middle rounded-md">
-                                <LoadingWatch />
-                                <h2 className="ml-3 font-semibold text-2xl mt-[-3px]">Please wait while we are reactivating our server</h2>
-                            </div>
-                        </div>
-                    }
 
                     <h1 className="text-accent text-center font-bold text-4xl">Create Account</h1>
                     <div className="flex items-center gap-4 pt-8 w-fit mx-auto">
@@ -159,7 +148,7 @@ const SignUp = () => {
                             onChange={e => setPassword(e.target.value)}
                         />
 
-                        <button 
+                        <button
                             disabled={visible}
                             className={`uppercase bg-accent px-4 py-2 text-white mt-4 rounded-md ${visible ? 'hover:bg-accent' : 'hover:bg-accentDark'}`}
                         >

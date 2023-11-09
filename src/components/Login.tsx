@@ -9,14 +9,12 @@ import { useEffect, useState } from "react"
 import { FaFacebookF, FaGoogle, FaInstagram } from "react-icons/fa"
 import { toast } from "react-toastify"
 import SpinnerLoading from "./LoadingSpinner"
-import LoadingWatch from './LoadingWatch'
 
 const Login = () => {
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [visible, setVisible] = useState(false)
-    const [isServerAlive, setIsServerAlive] = useState(process.env.NODE_ENV === "production" ? false : true)
 
     const router = useRouter()
 
@@ -65,35 +63,25 @@ const Login = () => {
     }, [router])
 
     useEffect(() => {
-        const aliveServer = async () => {
-            const loggedIn = await isLogin()
 
-            if (!loggedIn && process.env.NODE_ENV === "production") {
-                axios.get('https://intratec-dashboard-api.onrender.com/api')
-                    .then(() => {
-                        setIsServerAlive(true)
-                    }).catch(() => {
-                        setIsServerAlive(false)
-                    })
-            }
-        }
+        const myPromise = new Promise((resolve) =>
+            fetch("https://intratec-dashboard-api.onrender.com/api")
+            .then((response) => response.json())
+            .then((json) => setTimeout(() => resolve(json), 500))
+        );
 
-        aliveServer()
+        toast.promise(myPromise, {
+            pending: "Please wait while we are reactivating our server",
+            success: "The server is running",
+            error: "Server Error",
+        });
+        
     }, [])
 
     return (
         <div className="grid grid-cols-[1fr,30%]">
             <div className="h-screen grid place-items-center">
                 <div className="text-center">
-                   
-                    {!isServerAlive && 
-                        <div className="absolute left-[20%] top-48">
-                            <div className="flex bg-accent text-white p-4 mb-4 align-middle rounded-md">
-                                <LoadingWatch />
-                                <h2 className="ml-3 font-semibold text-2xl mt-[-3px]">Please wait while we are reactivating our server</h2>
-                            </div>
-                        </div>
-                    }
 
                     <h1 className="text-accent text-center font-bold text-4xl">Login to your Account</h1>
                     <div className="flex items-center gap-4 pt-8 w-fit mx-auto">
