@@ -138,7 +138,10 @@ const Login = () => {
                         <p>To keep connected with us please</p>
                         <p>please login with your personal info</p>
                         <Link href="/signup">
-                            <button className="uppercase px-4 py-2 w-[100%] rounded-full border-2 mt-8">
+                            <button 
+                                disabled={visible}
+                                className="uppercase px-4 py-2 w-[100%] rounded-full border-2 mt-8"
+                            >
                                 SignUp
                             </button>
                         </Link>
