@@ -67,15 +67,11 @@ const SignUp = () => {
     }, [router])
 
     useEffect(() => {
-
-        setVisible(true)
-
         const myPromise = new Promise((resolve) =>
             fetch("https://intratec-dashboard-api.onrender.com/api")
             .then((response) => response.json())
             .then((json) => setTimeout(() => {
-                setVisible(false)
-                resolve(json), 
+                resolve(json),
                 500
             }))
         );
