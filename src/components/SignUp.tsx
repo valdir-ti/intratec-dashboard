@@ -16,7 +16,6 @@ const SignUp = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [visible, setVisible] = useState(false)
-    const [isServerAlive, setIsServerAlive] = useState(process.env.NODE_ENV === "production" ? false : true)
 
     const router = useRouter()
 
@@ -69,10 +68,16 @@ const SignUp = () => {
 
     useEffect(() => {
 
+        setVisible(true)
+
         const myPromise = new Promise((resolve) =>
             fetch("https://intratec-dashboard-api.onrender.com/api")
             .then((response) => response.json())
-            .then((json) => setTimeout(() => resolve(json), 500))
+            .then((json) => setTimeout(() => {
+                setVisible(false)
+                resolve(json), 
+                500
+            }))
         );
 
         toast.promise(myPromise, {
@@ -132,6 +137,7 @@ const SignUp = () => {
                             className="input__style"
                             value={name}
                             onChange={e => setName(e.target.value)}
+                            disabled={visible}
                         />
                         <input
                             type="email"
@@ -139,6 +145,7 @@ const SignUp = () => {
                             className="input__style"
                             value={email}
                             onChange={e => setEmail(e.target.value)}
+                            disabled={visible}
                         />
                         <input
                             type="password"
@@ -146,13 +153,14 @@ const SignUp = () => {
                             className="input__style"
                             value={password}
                             onChange={e => setPassword(e.target.value)}
+                            disabled={visible}
                         />
 
                         <button
                             disabled={visible}
                             className={`uppercase bg-accent px-4 py-2 text-white mt-4 rounded-md ${visible ? 'hover:bg-accent' : 'hover:bg-accentDark'}`}
                         >
-                            <div className={`flex`}>
+                            <div className='flex'>
                                 <SpinnerLoading visible={visible} />
                                 <h2 className={`${visible ? 'ml-[82px]' : 'ml-[104px]'}`}>Sign Up</h2>
                             </div>
